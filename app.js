@@ -24,9 +24,10 @@ app.get('/',(req,res) => {
 })
 
 app.get('/makeCampground',async(req,res) => {
-  const camp = new Campground({title: 'my backyard', description: 'cheap camping!'});
-  await camp.save();
-  res.send(camp)
+  // const camp = new Campground({title: 'my backyard', description: 'cheap camping!'});
+  const camp = await Campground.find();
+  // await camp.save();
+  res.send(camp);
 })
 
 app.listen(3000,() => {

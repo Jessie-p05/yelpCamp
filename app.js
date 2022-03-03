@@ -27,7 +27,15 @@ app.get('/campgrounds',async(req,res) => {
   // const camp = new Campground({title: 'my backyard', description: 'cheap camping!'});
   const campgrounds = await Campground.find({});
   res.render('campgrounds/index',{campgrounds});
-})
+});
+
+app.get('/campgrounds/:id',async(req,res)=> {
+  // console.log(req.params.id)
+    const campground = await Campground.findById(req.params.id)
+    res.render('campgrounds/show',{campground})
+});
+
+// app.get('/campground')
 
 app.listen(3000,() => {
   console.log('yelpCame is listening on port 3000')

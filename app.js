@@ -3,10 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const Campground = require('./models/campground'); 
 const bodyParser = require('body-parser');
-const methodOverride = require('method-override')
-
-
-
+const methodOverride = require('method-override');
 
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp',{
@@ -29,7 +26,7 @@ app.use(methodOverride('_method'));
 
 app.get('/',(req,res) => {
   res.render("home");
-})
+});
 
 app.get('/campgrounds',async(req,res) => {
   // const camp = new Campground({title: 'my backyard', description: 'cheap camping!'});
@@ -74,7 +71,7 @@ app.delete('/campgrounds/:id', async(req,res) => {
   const {id} = req.params;
   await Campground.findByIdAndDelete(id);
   res.redirect('/campgrounds')
-})
+});
 
 app.listen(3000,() => {
   console.log('yelpCame is listening on port 3000')

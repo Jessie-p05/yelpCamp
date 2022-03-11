@@ -12,9 +12,14 @@
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5><a href="/campgrounds/<%= camp._id %>"><%= camp.title %></a></h5>
+              <h5><%= camp.title %></h5>
               <p class='card-text'><%= camp.description%> </p>
+              <p class="card-text"><small class='text-muted'><%=camp.location %></small></p>
+              <a href="/campgrounds/<%= camp._id %>" class="btn btn-primary">View detail</a>
             </div>
+          </div>
+          <div>
+
           </div>
         </div>
       </div>

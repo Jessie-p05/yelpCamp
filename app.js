@@ -3,9 +3,9 @@ const path = require("path");
 const mongoose = require("mongoose");
 const Campground = require("./models/campground");
 const ejsMate = require("ejs-mate");
-const joi = require('joi');
+const Joi = require("joi");
 const catchAsync = require("./helpers/catchAsync");
-const ExpressError = require('./helpers/ExpressError');
+const ExpressError = require("./helpers/ExpressError");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 
@@ -32,6 +32,25 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
+const validateCampground = (req, res, next) => {
+  const campgroundSchema = Joi.object({
+    campground: Joi.object({
+      title: Joi.string().required(),
+      price: Joi.number().required().min(0),
+      image: Joi.string().required(),
+      location: Joi.string().required(),
+      description: Joi.string().required(),
+    }).required(),
+  });
+  const { error } = campgroundSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
 app.get(
   "/campgrounds",
   catchAsync(async (req, res) => {
@@ -48,20 +67,8 @@ app.get("/campgrounds/new", (req, res) => {
 
 app.post(
   "/campgrounds",
+  validateCampground,
   catchAsync(async (req, res) => {
-    const campgroundSchema = Joi.object({
-      campground: Joi.object({
-        title: Joi.string().required(),
-        price: Joi.string().required(),
-        image: Joi.string().required(),
-        location: Joi.string().required(),
-        description: Joi.string().required()
-      }).required});
-      const {error} = campgroundSchema.validate(req.body);
-      if(error) {
-        const msg = error.details.map(el=>el.message).join(',')
-        throw new ExpressError(msg,400)
-      }
     const campground = new Campground(req.body.campground);
     await campground.save();
 
@@ -111,15 +118,15 @@ app.delete(
   })
 );
 
-app.all('*',(req,res,next) => {
-  next(new ExpressError('Page not found',404))
+app.all("*", (req, res, next) => {
+  next(new ExpressError("Page not found", 404));
 });
 
 app.use((err, req, res, next) => {
-  const {statusCode = 500} = err;
-  if(!err.statusCode) err.statusCode = 500;
-  if(!err.message) err.message = ' Oh No, something went wrong!'
-  res.status(statusCode).render('error',{err});
+  const { statusCode = 500 } = err;
+  if (!err.statusCode) err.statusCode = 500;
+  if (!err.message) err.message = " Oh No, something went wrong!";
+  res.status(statusCode).render("error", { err });
 });
 
 app.listen(3000, () => {

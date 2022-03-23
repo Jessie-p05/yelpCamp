@@ -6,7 +6,7 @@ const Review = require("./models/review");
 const ejsMate = require("ejs-mate");
 const catchAsync = require("./helpers/catchAsync");
 const ExpressError = require("./helpers/ExpressError");
-const {campgroundSchema} = require('./schemas')
+const {campgroundSchema, reviewSchema} = require('./schemas')
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const review = require("./models/review");
@@ -43,6 +43,16 @@ const validateCampground = (req, res, next) => {
     next();
   }
 };
+
+const validateReview = (req,res,next) => {
+  const {error} = reviewSchema.validate(req.body);
+  if(error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+}
 
 app.get(
   "/campgrounds",
@@ -112,24 +122,15 @@ app.delete(
 );
 
 //review route
-app.post("/campgrounds/:id/reviews", catchAsync(async (req, res)=> {
+app.post("/campgrounds/:id/reviews",validateReview, catchAsync(async (req, res)=> {
   const campground = await Campground.findById(req.params.id);
   const review = new Review(req.body.review);
   campground.reviews.push(review);
   await review.save();
   await campground.save();
   res.redirect(`/campgrounds/${campground._id}`)
-}))
-// app.post(
-//   "/campgrounds",
-//   validateCampground,
-//   catchAsync(async (req, res) => {
-//     const campground = new Campground(req.body.campground);
-//     await campground.save();
+}));
 
-//     res.redirect(`/campgrounds/${campground._id}`);
-//   })
-// );
 
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page not found", 404));

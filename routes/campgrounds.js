@@ -34,7 +34,7 @@ router.post(
   catchAsync(async (req, res) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
-
+    req.flash("success", "Successfully made a new campground!");
     res.redirect(`/campgrounds/${campground._id}`);
   })
 );
@@ -60,7 +60,8 @@ router.get(
 
 router.put(
   "/:id",
-  validateCampground,catchAsync(async (req, res) => {
+  validateCampground,
+  catchAsync(async (req, res) => {
     // console.log(req.params)
     // console.log(req.body)
     const campground = await Campground.findByIdAndUpdate(req.params.id, {

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 const passport = require('passport');
 
-const userSchema = new Schema({
+const UserSchema = new Schema({
   emails: {
     type: String,
     required: true,

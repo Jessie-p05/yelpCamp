@@ -12,8 +12,10 @@ const User = require('./models/user');
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 
+//routes
 const campgrounds = require("./routes/campgrounds");
 const reviews = require("./routes/reviews");
+const users = require('./routes/users')
 const { read } = require("fs");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
@@ -60,16 +62,13 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.get('/fakeUser',async(req,res) => {
-  const user = new User({emails:'jxpei05@gmail.com', username:'jxpei'})
-  const newUser = await User.register(user,'chicken');
-  res.send(newUser);
-})
 
 
-app.get("/", (req, res) => {
-  res.render("home");
-});
+
+// app.get("/", (req, res) => {
+//   res.render("home");
+// });
+app.use("/", users);
 app.use("/campgrounds", campgrounds);
 app.use("/campgrounds/:id/reviews", reviews);
 

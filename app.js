@@ -57,17 +57,13 @@ app.use((req, res, next) => {
 
 //passport authentication
 app.use(passport.initialize());
-app.use(session());
+app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
 
-
-// app.get("/", (req, res) => {
-//   res.render("home");
-// });
 app.use("/", users);
 app.use("/campgrounds", campgrounds);
 app.use("/campgrounds/:id/reviews", reviews);

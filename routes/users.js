@@ -26,7 +26,6 @@ router.post(
     const { email, username, password } = req.body;
     const user = new User({ email, username });
     const newUser = await User.register(user, password);
-    console.log(newUser);
     req.flash("success", "Welcome to Yelp Camp");
     res.redirect("/campgrounds");
   })
@@ -39,7 +38,7 @@ router.get("/login", (req, res) => {
 
 router.post(
   "/login",
-  passport.authenticate("local", { failure: true, failureRedirect: "/login" }),
+  passport.authenticate("local", { failureFlash: true, failureRedirect: "/login" }),
   (req, res) => {
     req.flash("success", "welcome back!");
     res.redirect("/campgrounds");

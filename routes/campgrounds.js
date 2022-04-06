@@ -60,7 +60,16 @@ router.get(
   "/:id/edit",
   isLoggedIn,
   catchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    if (!campground) {
+      req.flash("error", "campground not found!");
+      return res.redirect(`/campgrounds`);
+    }
+    if (!campground.author.equals(req.user._id)) {
+      req.flash("error", "You do not have permission to edit a campground!");
+      return res.redirect(`/campgrounds/${campground._id}`);
+    }
     res.render("campgrounds/edit", { campground });
   })
 );
@@ -72,10 +81,16 @@ router.put(
   catchAsync(async (req, res) => {
     // console.log(req.params)
     // console.log(req.body)
-    const campground = await Campground.findByIdAndUpdate(req.params.id, {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    if (!campground.author.equals(req.user._id)) {
+      req.flash("error", "You do not have permission to edit a campground!");
+      return res.redirect(`/campgrounds/${id}`);
+    }
+    const camp = await Campground.findByIdAndUpdate(id, {
       ...req.body.campground,
     });
-    req.flash("success", "Successfully updated a campground!");
+    req.flash("success", "Successfully updated this campground!");
     res.redirect(`/campgrounds/${campground._id}`);
   })
 );

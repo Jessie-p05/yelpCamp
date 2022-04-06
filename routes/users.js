@@ -32,9 +32,9 @@ router.post(
         req.flash("success", "Welcome to Yelp Camp");
         res.redirect("/campgrounds");
       });
-    } catch(e) {
-      req.flash('error', e.message);
-      res.redirect('/register');
+    } catch (e) {
+      req.flash("error", e.message);
+      res.redirect("/register");
     }
   })
 );
@@ -52,7 +52,9 @@ router.post(
   }),
   (req, res) => {
     req.flash("success", "welcome back!");
-    res.redirect("/campgrounds");
+    const redirectUrl = req.session.returnTo || "/campgrounds";
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
   }
 );
 

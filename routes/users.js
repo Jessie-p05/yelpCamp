@@ -4,24 +4,16 @@ const passport = require("passport");
 const User = require("../models/user");
 const catchAsync = require("../helpers/catchAsync");
 const ExpressError = require("../helpers/ExpressError");
-const { userSchema } = require("../schemas");
 
-const validateUser = (req, res, next) => {
-  const { error } = userSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
+const { validateUser } = require("../middleware");
+
 //register route
 router.get("/register", (req, res) => {
   res.render("users/register");
 });
 
 router.post(
-  "/register",
+  "/register", validateUser,
   catchAsync(async (req, res, next) => {
     try {
       const { email, username, password } = req.body;

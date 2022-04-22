@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -7,7 +10,7 @@ const flash = require("connect-flash");
 const ExpressError = require("./helpers/ExpressError");
 const passport = require("passport");
 const localStrategy = require("passport-local");
-const User = require('./models/user');
+const User = require("./models/user");
 
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
@@ -15,7 +18,7 @@ const methodOverride = require("method-override");
 //routes
 const campgrounds = require("./routes/campgrounds");
 const reviews = require("./routes/reviews");
-const users = require('./routes/users')
+const users = require("./routes/users");
 const { read } = require("fs");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
@@ -63,7 +66,6 @@ app.use((req, res, next) => {
   res.locals.error = req.flash("error");
   next();
 });
-
 
 app.use("/", users);
 app.use("/campgrounds", campgrounds);

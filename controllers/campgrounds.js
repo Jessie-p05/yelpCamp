@@ -52,7 +52,7 @@ module.exports.editCampground = async (req, res) => {
   res.redirect(`/campgrounds/${campground._id}`);
 };
 
-module.exports.deleteCamgrounds = async (req, res) => {
+module.exports.deleteCampgrounds = async (req, res) => {
   const { id } = req.params;
   await Campground.findByIdAndDelete(id);
   req.flash("success", "Successfully deleted a campground!");

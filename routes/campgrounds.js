@@ -15,10 +15,6 @@ router
     validateCampground,
     catchAsync(
     campgrounds.createCampground)
-    // (req, res) => {
-    //   res.send("it worked!");
-    //   console.log(req.body, req.files);
-    // }
   );
 
 //add new campground

@@ -19,14 +19,14 @@ const randomEleOfArray = (array) =>
 
 const seedDB = async () => {
   await Campground.deleteMany({});
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 500; i++) {
     const randomNum = Math.floor(Math.random() * 1000);
     const randomPrice = Math.floor(Math.random() * 30);
     const camp = new Campground({
       author: "624d2ebe7b801b1801084315",
       title: `${randomEleOfArray(descriptors)} ${randomEleOfArray(places)}`,
       location: `${cities[randomNum].city}, ${cities[randomNum].state}`,
-      geometry : { type : "Point", coordinates : [ -114.334624, 48.410802 ] },
+      geometry : { type : "Point", coordinates : [ cities[randomNum].longitude, cities[randomNum].latitude ] },
       images: [
         {
           url:

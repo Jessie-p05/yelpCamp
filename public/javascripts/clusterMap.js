@@ -35,20 +35,20 @@
                 'circle-color': [
                     'step',
                     ['get', 'point_count'],
-                    '#51bbd6',
+                    '#C8E6C9',
                     10,
-                    '#f1f075',
+                    '#26C6DA',
                     50,
-                    '#1E88E5'
+                    '#03A9F4'
                 ],
                 'circle-radius': [
                     'step',
                     ['get', 'point_count'],
-                    20,
+                    15,
                     10,
-                    30,
+                    20,
                     50,
-                    40
+                    30
                 ]
             }
         });

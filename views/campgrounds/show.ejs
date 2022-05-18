@@ -10,8 +10,10 @@
     >
       <div class="carousel-inner">
         <% campground.images.forEach((img,i) => { %>
-        <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-          <img src="<%=img.url %>" class="d-block w-100" alt="" />
+        <div class="carousel-item <%= i === 0 ? 'active' : '' %>" >
+          <div class="d-flex justify-content-center" id="image">
+            <img src="<%=img.url %>" alt="" />
+          </div>
         </div>
         <% }) %>
       </div>
@@ -69,7 +71,7 @@
     </div>
   </div>
 
-  <div id="map" ></div>
+  <div id="map"></div>
   <div class="col-6">
     <% if (currentUser) { %>
 

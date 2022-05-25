@@ -44,6 +44,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
 
 const sessionConfig = {
+  name:'session',
   secret: "thisiswhaticansee",
   resave: false,
   saveUninitialized: true,

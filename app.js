@@ -12,6 +12,7 @@ const ExpressError = require("./helpers/ExpressError");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 const User = require("./models/user");
+const helmet = require("helmet");
 
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
@@ -21,7 +22,7 @@ const campgrounds = require("./routes/campgrounds");
 const reviews = require("./routes/reviews");
 const users = require("./routes/users");
 const { read } = require("fs");
-const mongoSanitize = require('express-mongo-sanitize');
+const mongoSanitize = require("express-mongo-sanitize");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
@@ -45,7 +46,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
 
 const sessionConfig = {
-  name:'session',
+  name: "session",
   secret: "thisiswhaticansee",
   resave: false,
   saveUninitialized: true,
@@ -57,6 +58,75 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 app.use(flash());
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: false,
+//   })
+// );
+const scriptSrcUrls= [
+  "https://stackpath.bootstrapcdn.com",
+  "https://api.tiles.mapbox.com",
+  "https://api.mapbox.com",
+  "https://kit.fontawesome.com",
+  "https://code.jquery.com",
+  "https://cdnjs.cloudflare.com",
+  "https://cdn.jsdelivr.net",
+];
+const styleSrcUrls= [
+  "https://kit-free.fontawesome.com",
+  "https://stackpath.bootstrapcdn.com",
+  "https://api.tiles.mapbox.com",
+  "https://api.mapbox.com",
+  "https://fonts.googleapis.com",
+  "https://use.fontawesome.com",
+  
+];
+const connectSrcUrls = [
+  "https://a.tiles.mapbox.com",
+  "https://b.tiles.mapbox.com",
+  "https://api.mapbox.com",
+  "https://events.mapbox.com",
+];
+const fontSrcUrls=[];
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: [],
+      connectSrc:["'self'",...connectSrcUrls],
+      scriptSrc: ["'self'", "'unsafe-inline'",...scriptSrcUrls],
+      styleSrc:["'self'","'unsafe-inline'",...styleSrcUrls],
+      workerSrc:["'self'","blob:"],
+      objectSrc:[],
+      imgSrc:[
+        "'self'",
+        "blob:",
+        "data:",
+        "https://res.cloundinary.com/dmh83e19r",
+        "https://images.unsplash.com"
+      ],
+      fontSrc: ["'self'",...fontSrcUrls],
+      
+    },
+  })
+);
+
+
+
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     directives: {
+//       "default-src": [],
+      
+//       "script-src": ["'self'","'unsafe-inline'","trusted-cdn.com","https://cdn.com","https://api.mapbox.com"],
+//       "img-src":["https://unsplash.com","'unsafe-inline'"],
+//       "style-src-elem":["'self'","'unsafe-inline'"]
+//     },
+//     reportOnly: true,
+//   })
+// );
+
+
+
 
 //passport authentication
 app.use(passport.initialize());
@@ -76,9 +146,9 @@ app.use("/", users);
 app.use("/campgrounds", campgrounds);
 app.use("/campgrounds/:id/reviews", reviews);
 
-app.get('/',(req,res) => {
-  res.render('home')
-})
+app.get("/", (req, res) => {
+  res.render("home");
+});
 
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page not found", 404));

@@ -79,7 +79,7 @@ const styleSrcUrls= [
   "https://api.mapbox.com",
   "https://fonts.googleapis.com",
   "https://use.fontawesome.com",
-  
+  "https://cdn.jsdelivr.net",
 ];
 const connectSrcUrls = [
   "https://a.tiles.mapbox.com",
@@ -101,7 +101,7 @@ app.use(
         "'self'",
         "blob:",
         "data:",
-        "https://res.cloundinary.com/dmh83e19r",
+        "https://res.cloudinary.com/dmh83e19r/",
         "https://images.unsplash.com"
       ],
       fontSrc: ["'self'",...fontSrcUrls],

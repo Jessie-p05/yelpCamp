@@ -23,8 +23,10 @@ const reviews = require("./routes/reviews");
 const users = require("./routes/users");
 const { read } = require("fs");
 const mongoSanitize = require("express-mongo-sanitize");
+const dbUrl= process.env.DB_URL
 
-mongoose.connect("mongodb://localhost:27017/yelp-camp", {
+//mongodb://localhost:27017/yelp-camp
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

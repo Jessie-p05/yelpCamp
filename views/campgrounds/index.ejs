@@ -1,15 +1,15 @@
 <% layout('layouts/boilerplate') %>
 <div id="cluster-map"></div>
-  <h1>All campgrounds</h1>
+  <!-- <h1>All campgrounds</h1>
   <div>
     <a href="/campgrounds/new">add new campground</a>
-  </div>
+  </div> -->
   
     <% for(let camp of campgrounds) { %>
       <div class="card mb-3">
         <div class="row">
-          <div class="col-md-4">
-            <img src="<%= camp.images[0].url %>" alt="" class="img-fluid">
+          <div class="col-md-4 ">
+            <img src="<%= camp.images[0].url %>" alt="" class="img-fluid imageList">
           </div>
           <div class="col-md-8">
             <div class="card-body">

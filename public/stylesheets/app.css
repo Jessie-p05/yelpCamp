@@ -1,6 +1,7 @@
 #cluster-map {
   width: 100%;
   height: 500px;
+  margin-bottom: 20px;
 }
 #map {
   width: 400px;
@@ -12,10 +13,14 @@ img {
   max-width: 100%;
   max-height: 100%;
   margin: auto;
-  
 }
 #image {
   width: 100%;
   height: 500px;
   /* display: flex; */
+}
+.imageList {
+  width: 400px;
+  height: 250px;
+  object-fit: cover;
 }

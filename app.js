@@ -13,6 +13,7 @@ const passport = require("passport");
 const localStrategy = require("passport-local");
 const User = require("./models/user");
 const helmet = require("helmet");
+const MongoStore = require("connect-mongo");
 
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
@@ -23,9 +24,11 @@ const reviews = require("./routes/reviews");
 const users = require("./routes/users");
 const { read } = require("fs");
 const mongoSanitize = require("express-mongo-sanitize");
-const dbUrl= process.env.DB_URL
 
-//mongodb://localhost:27017/yelp-camp
+//connect to mongo atlas online database
+// const dbUrl = process.env.DB_URL;
+//connect to local database
+const dbUrl = "mongodb://localhost:27017/yelp-camp";
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -47,7 +50,17 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
 
+const store =  MongoStore.create({
+  mongoUrl: dbUrl,
+  secret: "thisiswhaticansee",
+  touchAfter: 24 * 3600,
+});
+store.on("error", function (e) {
+  console.log("SESSION STORE ERROR");
+});
+
 const sessionConfig = {
+  store,
   name: "session",
   secret: "thisiswhaticansee",
   resave: false,
@@ -65,7 +78,7 @@ app.use(flash());
 //     contentSecurityPolicy: false,
 //   })
 // );
-const scriptSrcUrls= [
+const scriptSrcUrls = [
   "https://stackpath.bootstrapcdn.com",
   "https://api.tiles.mapbox.com",
   "https://api.mapbox.com",
@@ -74,7 +87,7 @@ const scriptSrcUrls= [
   "https://cdnjs.cloudflare.com",
   "https://cdn.jsdelivr.net",
 ];
-const styleSrcUrls= [
+const styleSrcUrls = [
   "https://kit-free.fontawesome.com",
   "https://stackpath.bootstrapcdn.com",
   "https://api.tiles.mapbox.com",
@@ -89,36 +102,33 @@ const connectSrcUrls = [
   "https://api.mapbox.com",
   "https://events.mapbox.com",
 ];
-const fontSrcUrls=[];
+const fontSrcUrls = [];
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: [],
-      connectSrc:["'self'",...connectSrcUrls],
-      scriptSrc: ["'self'", "'unsafe-inline'",...scriptSrcUrls],
-      styleSrc:["'self'","'unsafe-inline'",...styleSrcUrls],
-      workerSrc:["'self'","blob:"],
-      objectSrc:[],
-      imgSrc:[
+      connectSrc: ["'self'", ...connectSrcUrls],
+      scriptSrc: ["'self'", "'unsafe-inline'", ...scriptSrcUrls],
+      styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+      workerSrc: ["'self'", "blob:"],
+      objectSrc: [],
+      imgSrc: [
         "'self'",
         "blob:",
         "data:",
         "https://res.cloudinary.com/dmh83e19r/",
-        "https://images.unsplash.com"
+        "https://images.unsplash.com",
       ],
-      fontSrc: ["'self'",...fontSrcUrls],
-      
+      fontSrc: ["'self'", ...fontSrcUrls],
     },
   })
 );
-
-
 
 // app.use(
 //   helmet.contentSecurityPolicy({
 //     directives: {
 //       "default-src": [],
-      
+
 //       "script-src": ["'self'","'unsafe-inline'","trusted-cdn.com","https://cdn.com","https://api.mapbox.com"],
 //       "img-src":["https://unsplash.com","'unsafe-inline'"],
 //       "style-src-elem":["'self'","'unsafe-inline'"]
@@ -126,9 +136,6 @@ app.use(
 //     reportOnly: true,
 //   })
 // );
-
-
-
 
 //passport authentication
 app.use(passport.initialize());

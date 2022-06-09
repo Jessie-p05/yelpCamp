@@ -124,18 +124,7 @@ app.use(
   })
 );
 
-// app.use(
-//   helmet.contentSecurityPolicy({
-//     directives: {
-//       "default-src": [],
 
-//       "script-src": ["'self'","'unsafe-inline'","trusted-cdn.com","https://cdn.com","https://api.mapbox.com"],
-//       "img-src":["https://unsplash.com","'unsafe-inline'"],
-//       "style-src-elem":["'self'","'unsafe-inline'"]
-//     },
-//     reportOnly: true,
-//   })
-// );
 
 //passport authentication
 app.use(passport.initialize());
@@ -170,6 +159,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { err });
 });
 
-app.listen(3000, () => {
-  console.log("yelpCame is listening on port 3000");
+const port = process.env.PORT || 3000
+app.listen(port, () => {
+  console.log(`yelpCame is listening on port ${port}`);
 });

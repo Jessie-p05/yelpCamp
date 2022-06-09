@@ -26,9 +26,9 @@ const { read } = require("fs");
 const mongoSanitize = require("express-mongo-sanitize");
 
 //connect to mongo atlas online database
-// const dbUrl = process.env.DB_URL;
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
 //connect to local database
-const dbUrl = "mongodb://localhost:27017/yelp-camp";
+// const dbUrl = "mongodb://localhost:27017/yelp-camp";
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
